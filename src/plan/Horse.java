@@ -72,7 +72,7 @@ public class Horse {
         }
         Set<Student> rset = riders.get(l);
         if ( rset.isEmpty() ){
-            lessons.remove(l) ;
+            lessons.remove(l);
         }
     }
 
