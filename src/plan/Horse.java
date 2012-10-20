@@ -67,11 +67,11 @@ public class Horse {
         riders.get(l).remove(st);
         Set<Lesson> lset = inLesson.get(st);
         lset.remove(l);
-        if ( lset.size() == 0 ){
+        if ( lset.isEmpty() ){
             students.remove(st);
         }
         Set<Student> rset = riders.get(l);
-        if ( rset.size() == 0){
+        if ( rset.isEmpty() ){
             lessons.remove(l);
         }
     }
