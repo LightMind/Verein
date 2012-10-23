@@ -1,4 +1,4 @@
-package ridingTimeTable.standard;
+package validation;
 
 import java.util.Calendar;
 import ridingTimeTable.interfaces.lessonChangeObserver;

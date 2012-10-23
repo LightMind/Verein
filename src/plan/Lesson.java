@@ -17,8 +17,8 @@ public class Lesson implements Comparable<Lesson> {
 	public Set<Teacher> teachers = new HashSet<Teacher>();
 	public Calendar beginn = new GregorianCalendar();
 	public Calendar end = new GregorianCalendar();
-	public LessonType lessonType = null;
-	public Place place = null;
+	public LessonType lessonType =  new LessonType("None", -1);
+	public Place place = new Place("None", -1);
 
 	public Lesson(int id){
 		this.id = id;
@@ -124,15 +124,11 @@ public class Lesson implements Comparable<Lesson> {
 
 	@Override
 	public int compareTo(Lesson arg0) {
-		int c1 = getBeginn().compareTo(arg0.getBeginn());
-		if ( c1 == 0){
-			int c2 = end.compareTo(arg0.getEnd());
-			if (c2 == 0){
-				return id - arg0.id;
-			}
-			return c2;
+		int comp = beginn.compareTo(arg0.beginn);
+		if ( comp == 0 ){
+			return this.id - arg0.id;
 		}
-		return c1;
+		return comp;
 	}
 
 	@Override

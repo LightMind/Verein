@@ -56,8 +56,7 @@ public class LessonType implements Observer<Lesson>{
 
 	@Override
 	public void notify(Lesson source) {
-		unassign(source);
-		assign(source);
+		Collections.sort(lessons);
 	}
 
 	@Override

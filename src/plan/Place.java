@@ -8,8 +8,8 @@ import util.Assorted;
 import util.Observer;
 
 public class Place implements Observer<Lesson>{
-	public String name;
-	public List<Lesson> lessons;
+	public String name = "";
+	public List<Lesson> lessons = new ArrayList<Lesson>();
 	public final int id;
 
 	public Place(String n, int id) {
@@ -49,8 +49,7 @@ public class Place implements Observer<Lesson>{
 
 	@Override
 	public void notify(Lesson source) {
-		unassign(source);
-		assign(source);		
+		Collections.sort(lessons);
 	}
 
 	@Override

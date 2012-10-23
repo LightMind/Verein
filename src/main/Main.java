@@ -1,9 +1,14 @@
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+
 import plan.Horse;
 import plan.Lesson;
 import plan.Student;
 import plan.Teacher;
+import plan.ui.horse.HorseTableModel;
 
 public class Main {
 
@@ -23,9 +28,13 @@ public class Main {
 		Student st3 = new Student("Stud3", 3);
 		
 		Lesson l1 = new Lesson(1);
+		Lesson l2 = new Lesson(2);
 		
 		l1.assign(t1);
 		l1.addStudent(st1);
+		
+		l2.addStudent(st2);
+		l2.assignHorse(st2, h1);
 		
 		System.out.println(t1);
 		System.out.println(st1);
@@ -33,8 +42,15 @@ public class Main {
 		l1.assignHorse(st1, h1);
 		System.out.println(st1);
 		
-		l1.removeStudent(st1);
-		System.out.println(st1);
+
+		JFrame frame1 = new JFrame();
+		TableModel t = new HorseTableModel(h1);
+		JTable table = new JTable(t);
+		frame1.add(table);
+		frame1.pack();
+		frame1.setVisible(true);
+		
+		
 		
 
 	}
