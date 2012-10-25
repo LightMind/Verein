@@ -1,6 +1,5 @@
 package test.lesson;
 
-
 import static org.junit.Assert.*;
 
 import java.util.GregorianCalendar;
@@ -13,14 +12,14 @@ import org.junit.Test;
 import plan.Lesson;
 
 public class LessonPlanTest {
-	
+
 	private plan.LessonPlan plan;
 
 	@Before
 	public void setUp() throws Exception {
 		plan = new plan.LessonPlan();
 	}
-	
+
 	@Test
 	public void testSameBeginn() {
 		Lesson l1 = new Lesson(1);

@@ -1,62 +1,47 @@
 package plan;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.NavigableSet;
 
-import util.Observer;
+import util.SortedObservingSet;
 
-public class LessonType implements Observer<Lesson>{
+public class LessonType {
 	public final int id;
-    public String type;
-    public List<Lesson> lessons = new ArrayList<Lesson>();
+	public String type;
+	public NavigableSet<Lesson> lessons = new SortedObservingSet<Lesson>();
 
-    public LessonType(String t, int id){
-        type = t;
-        this.id = id;
-    }
+	public LessonType(String t, int id) {
+		type = t;
+		this.id = id;
+	}
 
-    // mutators //
+	// mutators //
 
-    public boolean assign(Lesson l){
-        int index = Collections.binarySearch(lessons,l);
-        if ( index  < 0 ){
-            lessons.add((-1)*(index+1),l);
-            return true;
-        }
-        return false;
-    }
+	public void assign(Lesson l) {
+		lessons.add(l);
+	}
 
-    public boolean unassign(Lesson l){
-        int index = Collections.binarySearch(lessons,l);
-        if ( index < 0 ){
-            return false;
-        }
-        lessons.remove(index);
-        return true;
-    }
+	public void unassign(Lesson l) {
+		lessons.remove(l);
+	}
 
-    // accessors //
-    
-    public String getType(){
-        return type;
-    }
+	// accessors //
 
-    public List<Lesson> getLessons(){
-        return new ArrayList<Lesson>(lessons);
-    }
+	public String getType() {
+		return type;
+	}
 
-    public int numberOfStudents(){
-        int counter = 0;
-        for(Lesson l : lessons){
-            counter += l.numberOfStudents();
-        }
-        return counter;
-    }
+	public List<Lesson> getLessons() {
+		return new ArrayList<Lesson>(lessons);
+	}
 
-	@Override
-	public void notify(Lesson source) {
-		Collections.sort(lessons);
+	public int numberOfStudents() {
+		int counter = 0;
+		for (Lesson l : lessons) {
+			counter += l.numberOfStudents();
+		}
+		return counter;
 	}
 
 	@Override

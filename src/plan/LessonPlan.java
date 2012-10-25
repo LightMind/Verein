@@ -1,36 +1,55 @@
 package plan;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.NavigableSet;
 
-import util.Observer;
+import util.SortedObservingSet;
 
-public class LessonPlan implements Observer<Lesson>{
-	public List<Lesson> lessons = new ArrayList<Lesson>();
+public class LessonPlan {
+	public NavigableSet<Lesson> lessons = new SortedObservingSet<Lesson>();
 
-	//public List<Person> persons = new ArrayList<Person>();
-	//public List<Horse> horses = new ArrayList<Horse>();
-	//public List<Place> places = new ArrayList<Place>();
-	//public List<LessonType> lessonTypes = new ArrayList<LessonType>();
-
-	@Override
-	public void notify(Lesson source) {
-		Collections.sort(lessons);
+	public void addLesson(Lesson newLesson) {
+		lessons.add(newLesson);
 	}
-	
-	public void addLesson(Lesson newLesson){
-		int index = Collections.binarySearch(lessons, newLesson);
-		if ( index < 0){
-			int corrected = (index+1)*(-1);
-			lessons.add(corrected,newLesson);
-			return;
-		}
-		if ( !lessons.get(index).equals(newLesson)){
-			lessons.add(index,newLesson);
-			return;
-		}
-		// the lesson is already in the list
+
+	public void removeLesson(Lesson lesson) {
+		lessons.remove(lesson);
 	}
-	
+
+	public NavigableSet<Lesson> getLessonsOnDay(Calendar day) {
+		int year = day.get(Calendar.YEAR);
+		int dayOfYear = day.get(Calendar.DAY_OF_YEAR);
+		Calendar start = new GregorianCalendar(year, 0, 1, 0, 0);
+		start.set(Calendar.DAY_OF_YEAR, dayOfYear);
+		Calendar end = new GregorianCalendar(year, 0, 1, 0, 0);
+		end.set(Calendar.DAY_OF_YEAR, dayOfYear + 1);
+
+		Lesson lStart = new Lesson(-1);
+		lStart.setBeginn(start);
+		Lesson lEnd = new Lesson(-1);
+		lEnd.setBeginn(end);
+
+		return lessons.subSet(lStart, true, lEnd, false);
+
+	}
+
+	public NavigableSet<Lesson> getLessonsOnWeek(Calendar inWeek) {
+		int year = inWeek.get(Calendar.YEAR);
+		int week = inWeek.get(Calendar.WEEK_OF_YEAR);
+		Calendar start = new GregorianCalendar(year, 0, 1, 0, 0);
+		start.add(Calendar.WEEK_OF_YEAR, week);
+		start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		Calendar end = new GregorianCalendar(year, 0, 1, 0, 0);
+		start.add(Calendar.WEEK_OF_YEAR, week + 1);
+		start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+		Lesson lStart = new Lesson(-1);
+		lStart.setBeginn(start);
+		Lesson lEnd = new Lesson(-1);
+		lEnd.setBeginn(end);
+
+		return lessons.subSet(lStart, true, lEnd, false);
+	}
+
 }

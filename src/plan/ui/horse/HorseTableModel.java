@@ -8,13 +8,13 @@ import javax.swing.table.TableModel;
 import plan.Horse;
 
 public class HorseTableModel implements TableModel {
-	
+
 	private Horse horse;
-	
+
 	private List<TableModelListener> listeners = new ArrayList<TableModelListener>();
-	
-	public HorseTableModel(Horse h){
-		horse = h;		
+
+	public HorseTableModel(Horse h) {
+		horse = h;
 	}
 
 	@Override
@@ -25,12 +25,15 @@ public class HorseTableModel implements TableModel {
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		// lesson id, rider id
-		switch (columnIndex){
-		case 0: 
-		case 1: return Integer.class;
-		case 2: return String.class;
-		default : return Integer.class;
-		}		
+		switch (columnIndex) {
+		case 0:
+		case 1:
+			return Integer.class;
+		case 2:
+			return String.class;
+		default:
+			return Integer.class;
+		}
 	}
 
 	@Override
@@ -40,12 +43,15 @@ public class HorseTableModel implements TableModel {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		switch (columnIndex){
-		case 0: 
-		case 1: return "Lesson";
-		case 2: return "Rider";
-		default : return "Name";
-		}	
+		switch (columnIndex) {
+		case 0:
+		case 1:
+			return "Lesson";
+		case 2:
+			return "Rider";
+		default:
+			return "Name";
+		}
 	}
 
 	@Override
@@ -83,7 +89,7 @@ public class HorseTableModel implements TableModel {
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-	
+
 	}
 
 }

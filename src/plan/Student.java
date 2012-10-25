@@ -51,8 +51,9 @@ public class Student extends Person {
 
 	@Override
 	public String toString() {
-		return "Student [inLessons=" + (inLessons) + ", lessons=" + Assorted.renderList(lessons)
-				+ ", rides=" + rides + "] Super:" + super.toString();
+		return "Student [inLessons=" + (inLessons) + ", lessons="
+				+ Assorted.renderList(lessons) + ", rides=" + rides
+				+ "] Super:" + super.toString();
 	}
 
 	public void unassign(Lesson l) {
@@ -78,7 +79,7 @@ public class Student extends Person {
 	public void unassign(Lesson l, Horse h) {
 		rides.put(l, null);
 		Set<Lesson> lset = inLessons.get(h);
-		lset.remove(h);
+		lset.remove(l);
 		if (lset.size() == 0) {
 			lessons.remove(l);
 		}

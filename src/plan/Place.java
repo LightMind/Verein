@@ -1,15 +1,15 @@
 package plan;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.NavigableSet;
 
 import util.Assorted;
-import util.Observer;
+import util.SortedObservingSet;
 
-public class Place implements Observer<Lesson>{
+public class Place {
 	public String name = "";
-	public List<Lesson> lessons = new ArrayList<Lesson>();
+	public NavigableSet<Lesson> lessons = new SortedObservingSet<Lesson>();
 	public final int id;
 
 	public Place(String n, int id) {
@@ -19,22 +19,12 @@ public class Place implements Observer<Lesson>{
 
 	// mutators //
 
-	public boolean assign(Lesson l) {
-		int index = Collections.binarySearch(lessons, l);
-		if (index < 0) {
-			lessons.add((-1) * (index + 1), l);
-			return true;
-		}
-		return false;
+	public void assign(Lesson l) {
+		lessons.add(l);
 	}
 
-	public boolean unassign(Lesson l) {
-		int index = Collections.binarySearch(lessons, l);
-		if (index < 0) {
-			return false;
-		}
-		lessons.remove(index);
-		return true;
+	public void unassign(Lesson l) {
+		lessons.remove(l);
 	}
 
 	// accessors //
@@ -45,11 +35,6 @@ public class Place implements Observer<Lesson>{
 
 	public List<Lesson> getLessons() {
 		return new ArrayList<Lesson>(lessons);
-	}
-
-	@Override
-	public void notify(Lesson source) {
-		Collections.sort(lessons);
 	}
 
 	@Override
@@ -82,7 +67,8 @@ public class Place implements Observer<Lesson>{
 
 	@Override
 	public String toString() {
-		return "Place [lessons=" + Assorted.renderList(lessons) + ", name=" + name + "]";
+		return "Place [lessons=" + Assorted.renderList(lessons) + ", name="
+				+ name + "]";
 	}
 
 }

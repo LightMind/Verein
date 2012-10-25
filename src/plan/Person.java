@@ -1,16 +1,17 @@
 package plan;
 
-public class Person{
-    public String name;
-    public final int id;
-    public Person(String name, int id){
-        this.name = name;
-        this.id = id;
-    }
+public class Person {
+	public String name;
+	public final int id;
 
-    public String getName(){
-        return name;
-    }
+	public Person(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
 
 	@Override
 	public int hashCode() {

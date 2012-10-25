@@ -1,24 +1,25 @@
 package plan;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+
+import util.SortedObservingSet;
 
 public class Teacher extends Person {
-    Set<Lesson> lessons = new HashSet<Lesson>();
+	SortedSet<Lesson> lessons = new SortedObservingSet<Lesson>();
 
-    public Teacher(String name, int id){
-        super(name, id);
-    }
+	public Teacher(String name, int id) {
+		super(name, id);
+	}
 
-    public void assign(Lesson l){
-        lessons.add(l);
-    }
-    
-    public void unassign(Lesson l){
-        lessons.remove(l);
-    }
+	public void assign(Lesson l) {
+		lessons.add(l);
+	}
 
-    @Override
+	public void unassign(Lesson l) {
+		lessons.remove(l);
+	}
+
+	@Override
 	public int hashCode() {
 		return super.hashCode();
 	}

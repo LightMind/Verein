@@ -14,11 +14,11 @@ public class WindowTest {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Horse");
 		frame.setBounds(0, 0, 500, 400);
-		
+
 		JLabel nameLabel = new JLabel("Horse A");
 		frame.add(nameLabel);
-		
-	    frame.setVisible(true);
+
+		frame.setVisible(true);
 
 	}
 

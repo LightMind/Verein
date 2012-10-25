@@ -1,7 +1,10 @@
 package plan;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,21 +12,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Lesson implements Comparable<Lesson> {
+import util.Observeable;
+import util.Observer;
+
+public class Lesson implements Comparable<Lesson>, Observeable<Lesson> {
 	public final int id;
-	
+
 	public Set<Student> students = new HashSet<Student>();
 	public Map<Student, Horse> riders = new HashMap<Student, Horse>();
 	public Set<Teacher> teachers = new HashSet<Teacher>();
 	public Calendar beginn = new GregorianCalendar();
 	public Calendar end = new GregorianCalendar();
-	public LessonType lessonType =  new LessonType("None", -1);
+	public LessonType lessonType = new LessonType("None", -1);
 	public Place place = new Place("None", -1);
 
-	public Lesson(int id){
+	public Lesson(int id) {
 		this.id = id;
 	}
-	
+
+	public Lesson(int id, Calendar beginn) {
+		this.id = id;
+		this.beginn = new GregorianCalendar();
+		this.beginn.setTime(beginn.getTime());
+
+		this.end = new GregorianCalendar();
+		this.end.setTime(beginn.getTime());
+		this.end.add(Calendar.MINUTE, 60);
+	}
+
 	// mutators //
 
 	public void setPlace(Place p) {
@@ -43,13 +59,40 @@ public class Lesson implements Comparable<Lesson> {
 	}
 
 	public void setEnd(Calendar c) {
-		end.setTime(c.getTime());
+		if (c.after(beginn)) {
+			end.setTime(c.getTime());
+		}
+	}
+
+	public int getDuration() {
+		long duration = end.getTimeInMillis() - beginn.getTimeInMillis();
+		int lessonDuration = (int) (duration / 60000);
+		return lessonDuration;
+	}
+
+	public void setDuration(int minutes) {
+		Calendar lend = getBeginn();
+		lend.add(Calendar.MINUTE, minutes);
+		setEnd(lend);
 	}
 
 	public void setBeginn(Calendar c) {
+		int lessonDuration = getDuration();
+		if (lessonDuration < 5) {
+			lessonDuration = 5;
+		}
+
+		for (Observer<Lesson> observer : obser) {
+			observer.notifyBeforeChange(this);
+		}
 		beginn.setTime(c.getTime());
-		lessonType.notify(this);
-		place.notify(this);
+		for (Observer<Lesson> observer : obser) {
+			observer.notifyAfterChange(this);
+		}
+
+		this.end = new GregorianCalendar();
+		this.end.setTime(beginn.getTime());
+		this.end.add(Calendar.MINUTE, lessonDuration);
 	}
 
 	public void assign(Teacher t) {
@@ -75,7 +118,7 @@ public class Lesson implements Comparable<Lesson> {
 	}
 
 	public void assignHorse(Student st, Horse h) {
-		if (!students.contains(st)){
+		if (!students.contains(st)) {
 			addStudent(st);
 		}
 		if (null != riders.get(st)) {
@@ -125,7 +168,7 @@ public class Lesson implements Comparable<Lesson> {
 	@Override
 	public int compareTo(Lesson arg0) {
 		int comp = beginn.compareTo(arg0.beginn);
-		if ( comp == 0 ){
+		if (comp == 0) {
 			return this.id - arg0.id;
 		}
 		return comp;
@@ -136,12 +179,18 @@ public class Lesson implements Comparable<Lesson> {
 		return "Lesson [id=" + id + "]";
 	}
 
+	public String formatTime() {
+		DateFormat md = new SimpleDateFormat("dd-MM-yyyy");
+		DateFormat time = new SimpleDateFormat("HH:mm");
+		return "On the " + md.format(beginn.getTime()) + " from "
+				+ time.format(beginn.getTime()) + " - "
+				+ time.format(end.getTime());
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((beginn == null) ? 0 : beginn.hashCode());
-		result = prime * result + ((end == null) ? 0 : end.hashCode());
 		result = prime * result + id;
 		return result;
 	}
@@ -155,18 +204,51 @@ public class Lesson implements Comparable<Lesson> {
 		if (getClass() != obj.getClass())
 			return false;
 		Lesson other = (Lesson) obj;
-		if (beginn == null) {
-			if (other.beginn != null)
-				return false;
-		} else if (!beginn.equals(other.beginn))
-			return false;
-		if (end == null) {
-			if (other.end != null)
-				return false;
-		} else if (!end.equals(other.end))
-			return false;
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	private Set<Observer<Lesson>> obser = new HashSet<Observer<Lesson>>();
+
+	@Override
+	public void addObserver(Observer<Lesson> obs) {
+		obser.add(obs);
+	}
+
+	@Override
+	public void removeObserver(Observer<Lesson> obs) {
+		obser.remove(obs);
+	}
+
+	public static Comparator<Lesson> comparator() {
+		return new Comparator<Lesson>() {
+			@Override
+			public int compare(Lesson o1, Lesson o2) {
+				int comp = o1.beginn.compareTo(o2.beginn);
+				if (comp == 0) {
+					return o1.id - o2.id;
+				}
+				return comp;
+			}
+		};
+	}
+
+	public void snapTo(int minutes) {
+		int startMinutes = beginn.get(Calendar.MINUTE);
+		int snapCheckStart = startMinutes % minutes;
+		if (snapCheckStart != 0) {
+			Calendar lstart = getBeginn();
+			lstart.add(Calendar.MINUTE, -snapCheckStart);
+			setBeginn(lstart);
+		}
+
+		int duration = getDuration();
+		if (duration > minutes) {
+			int snapCheckDuration = duration % minutes;
+			setDuration(duration - snapCheckDuration);
+		} else {
+			setDuration(minutes);
+		}
 	}
 }
